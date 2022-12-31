@@ -50,7 +50,7 @@ if file_uploader is not None:
     # select required columns & remove duplicates
     etsy_df = etsy_multi[['Buyer', 'SKU', 'Quantity']].drop_duplicates()
     
-    top_50_items = etsy_df.groupby('Item Name').agg(
+    top_50_items = etsy_df.groupby('SKU').agg(
         orders=('Buyer', 'nunique'),
         quantity=('Quantity', 'sum')
         ).sort_values(by='orders', ascending=False).head(50)
