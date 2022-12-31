@@ -35,17 +35,17 @@ if file_uploader is not None:
     selected_sku = st.selectbox("Select an SKU", skus)
 
     # extract username from Buyer column
-    etsy['Buyer'] = etsy['Buyer'].str.extract(r'(\(.*?\))')
-    etsy['Buyer'] = etsy['Buyer'].str.replace(r'(\(|\))', '', regex=True)
+    df['Buyer'] = df['Buyer'].str.extract(r'(\(.*?\))')
+    df['Buyer'] = df['Buyer'].str.replace(r'(\(|\))', '', regex=True)
         
     # convert usernames to IDs
-    etsy["Buyer"], name_index = etsy["Buyer"].factorize()
+    df["Buyer"], name_index = df["Buyer"].factorize()
     
     # Count the occurrences of each value in the 'Buyer' column
-    counts = etsy["Buyer"].value_counts()
+    counts = df["Buyer"].value_counts()
     
     # Filter the DataFrame to include only rows where the value in the 'Buyer' column occurs more than once
-    etsy_multi = etsy[etsy["Buyer"].isin(counts[counts > 1].index)]
+    etsy_multi = df[df["Buyer"].isin(counts[counts > 1].index)]
     
     # select required columns & remove duplicates
     etsy_df = etsy_multi[['Buyer', 'Item Name', 'Quantity']].drop_duplicates()
