@@ -57,7 +57,7 @@ if file_uploader is not None:
     
     etsy_df_items = etsy_df[etsy_df["Item Name"].isin(top_50_items.index)].pivot_table(index='Buyer', columns=['Item Name'], values='Quantity').fillna(0)
     
-    recommendations = get_recommendations(etsy_df_items, 'BGDC').head(10)
+    recommendations = get_recommendations(etsy_df_items, selected_sku).head(10)
 
     # Display the filtered DataFrame
     st.dataframe(recommendations)
