@@ -26,38 +26,39 @@ def get_recommendations(df, item):
 # Check if a file has been uploaded
 if file_uploader is not None:
     # Load the CSV file into a DataFrame
-    df = pd.read_csv(file_uploader)
+    df = pd.read_csv("data/etsy_names_removed.csv")
 
-    # extract username from Buyer column
+    #extract username from Buyer column
     df['Buyer'] = df['Buyer'].str.extract(r'(\(.*?\))')
     df['Buyer'] = df['Buyer'].str.replace(r'(\(|\))', '', regex=True)
-        
+    df = df[df['Buyer'].notna()]
+
     # convert usernames to IDs
     df["Buyer"], name_index = df["Buyer"].factorize()
-    
-    # Count the occurrences of each value in the 'Buyer' column
+
+    #Count the occurrences of each value in the 'Buyer' column
     counts = df["Buyer"].value_counts()
-    
+
     # Filter the DataFrame to include only rows where the value in the 'Buyer' column occurs more than once
     etsy_multi = df[df["Buyer"].isin(counts[counts > 1].index)]
-    
+
     # select required columns & remove duplicates
     etsy_df = etsy_multi[['Buyer', 'SKU', 'Quantity']].drop_duplicates()
-    
+
     top_50_items = etsy_df.groupby('SKU').agg(
         orders=('Buyer', 'nunique'),
         quantity=('Quantity', 'sum')
         ).sort_values(by='orders', ascending=False).head(50)
-    
+
     etsy_df_items = etsy_df[etsy_df["SKU"].isin(top_50_items.index)].pivot_table(index='Buyer', columns=['SKU'], values='Quantity').fillna(0)
-    
+
     # Get the unique values in the 'SKU' column
     skus = etsy_df["SKU"].unique()
-    
+
     # Create a dropdown widget with the unique SKUs
     selected_sku = st.selectbox("Select a SKU", skus)
-    
+
     recommendations = get_recommendations(etsy_df_items, selected_sku).head(10)
 
-    # Display the filtered DataFrame
-    st.dataframe(recommendations)
+    # # Display the filtered DataFrame
+    recommendations.head(10)
