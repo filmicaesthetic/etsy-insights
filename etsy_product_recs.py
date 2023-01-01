@@ -68,20 +68,6 @@ if file_uploader is not None:
 
     # Apply the formatting function to the 'percentage' column
     recommendations["correlation"] = recommendations["correlation"].apply(to_percentage)
-    
-    # CSS to inject contained in a string
-    hide_table_row_index = """
-                <style>
-                thead tr th:first-child {display:none}
-                tbody th {display:none}
-                </style>
-                """
-
-    # Inject CSS with Markdown
-    st.markdown(hide_table_row_index, unsafe_allow_html=True)
-
-    # Display a static table
-    st.table(recommendations.style.format({'correlation': '{:,.2%}'}).bar(subset=['correlation']))
 
     # # Display the filtered DataFrame
-    #st.dataframe(recommendations)
+    st.dataframe(recommendations)
