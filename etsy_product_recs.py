@@ -67,7 +67,7 @@ if file_uploader is not None:
         return f"{x:.1%}"
 
     # Apply the formatting function to the 'percentage' column
-    recommendations["correlation"] = df["correlation"].apply(to_percentage)
+    recommendations["correlation"] = recommendations["correlation"].apply(to_percentage)
 
     # # Display the filtered DataFrame
     st.dataframe(recommendations)
