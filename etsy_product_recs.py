@@ -26,7 +26,7 @@ def get_recommendations(df, item):
 # Check if a file has been uploaded
 if file_uploader is not None:
     # Load the CSV file into a DataFrame
-    df = pd.read_csv("data/etsy_names_removed.csv")
+    df = pd.read_csv(file_uploader)
 
     #extract username from Buyer column
     df['Buyer'] = df['Buyer'].str.extract(r'(\(.*?\))')
