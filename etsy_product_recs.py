@@ -81,7 +81,7 @@ if file_uploader is not None:
     st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
     # Display a static table
-    st.table(recommendations.style.format({'correlation': '{:,.2%}'}).bar(subset=['correlation'], align="mid"))
+    st.table(recommendations.style.format({'correlation': '{:,.2%}'}).bar(subset=['correlation']))
 
     # # Display the filtered DataFrame
     #st.dataframe(recommendations)
