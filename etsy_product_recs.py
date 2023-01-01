@@ -53,7 +53,7 @@ if file_uploader is not None:
     etsy_df_items = etsy_df[etsy_df["SKU"].isin(top_50_items.index)].pivot_table(index='Buyer', columns=['SKU'], values='Quantity').fillna(0)
 
     # Get the unique values in the 'SKU' column
-    skus = etsy_df["SKU"].unique()
+    skus = etsy_df['SKU'][etsy_df["SKU"].isin(top_50_items.index)].unique()
 
     # Create a dropdown widget with the unique SKUs
     selected_sku = st.selectbox("Select a SKU", skus)
@@ -61,4 +61,4 @@ if file_uploader is not None:
     recommendations = get_recommendations(etsy_df_items, selected_sku).head(10)
 
     # # Display the filtered DataFrame
-    recommendations.head(10)
+    st.dataframe(recommendations)
