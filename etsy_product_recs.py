@@ -65,7 +65,7 @@ if file_uploader is not None:
     recommendations = recommendations.iloc[1:11]
     
     # Remove any with negative correlation from top 10
-    recommendations = recommendations[recommendations["correlation"] < 0]
+    recommendations = recommendations[recommendations["correlation"] > 0]
     
     # Define a formatting function that converts a number to percentage format
     def to_percentage(x):
