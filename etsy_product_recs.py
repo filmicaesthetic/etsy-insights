@@ -58,9 +58,14 @@ if file_uploader is not None:
     # Create a dropdown widget with the unique SKUs
     selected_sku = st.selectbox("Select an item", skus)
 
+    # Apply get_recommendations function
     recommendations = get_recommendations(etsy_df_items, selected_sku)
     
+    # Get top 10 rows not including self
     recommendations = recommendations.iloc[1:11]
+    
+    # Remove any with negative correlation from top 10
+    recommendations = recommendations[recommendations["correlation"] < 0]
     
     # Define a formatting function that converts a number to percentage format
     def to_percentage(x):
