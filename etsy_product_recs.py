@@ -43,22 +43,31 @@ if file_uploader is not None:
     etsy_multi = df[df["Buyer"].isin(counts[counts > 1].index)]
 
     # select required columns & remove duplicates
-    etsy_df = etsy_multi[['Buyer', 'SKU', 'Quantity']].drop_duplicates()
+    etsy_df = etsy_multi[['Buyer', 'Item Name', 'Quantity']].drop_duplicates()
 
-    top_50_items = etsy_df.groupby('SKU').agg(
+    top_50_items = etsy_df.groupby('Item Name').agg(
         orders=('Buyer', 'nunique'),
         quantity=('Quantity', 'sum')
         ).sort_values(by='orders', ascending=False).head(50)
 
-    etsy_df_items = etsy_df[etsy_df["SKU"].isin(top_50_items.index)].pivot_table(index='Buyer', columns=['SKU'], values='Quantity').fillna(0)
+    etsy_df_items = etsy_df[etsy_df["Item Name"].isin(top_50_items.index)].pivot_table(index='Buyer', columns=['Item Name'], values='Quantity').fillna(0)
 
     # Get the unique values in the 'SKU' column
-    skus = etsy_df['SKU'][etsy_df["SKU"].isin(top_50_items.index)].unique()
+    skus = etsy_df['Item Name'][etsy_df["Item Name"].isin(top_50_items.index)].unique()
 
     # Create a dropdown widget with the unique SKUs
-    selected_sku = st.selectbox("Select a SKU", skus)
+    selected_sku = st.selectbox("Select an item", skus)
 
-    recommendations = get_recommendations(etsy_df_items, selected_sku).head(10)
+    recommendations = get_recommendations(etsy_df_items, selected_sku)
+    
+    recommendations = recommendations.iloc[1:11]
+    
+    # Define a formatting function that converts a number to percentage format
+    def to_percentage(x):
+        return f"{x:.1%}"
+
+    # Apply the formatting function to the 'percentage' column
+    recommendations["correlation"] = df["correlation"].apply(to_percentage)
 
     # # Display the filtered DataFrame
     st.dataframe(recommendations)
